@@ -1,8 +1,11 @@
-<div>
-  <h1>
-    Welcome to {{ title }}!!
-  </h1>
-  <code>
-    {{ data | json }}
-  </code>
+<mat-progress-spinner mode="indeterminate" *ngIf="loading"></mat-progress-spinner>
+<div *ngIf="!loading">
+  <mat-toolbar>
+      Ort: {{ data?.location?.name }}
+  </mat-toolbar>
+  <mat-card>
+    <code>
+      {{ data | json }}
+    </code>
+  </mat-card>
 </div>
