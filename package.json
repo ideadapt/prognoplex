@@ -1,5 +1,5 @@
 {
-  "name": "prognoplex",
+  "name": "wemux",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "sw": "ng build --prod && http-server -c-1 dist/prognoplex"
+    "sw": "ng build --prod && http-server -c-1 dist/wemux"
   },
   "private": true,
   "dependencies": {

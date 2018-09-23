@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/prognoplex",
+    "public": "dist/wemux",
     "ignore": [
       "firebase.json",
       "**/.*",
