@@ -1,11 +1,18 @@
-<mat-progress-spinner mode="indeterminate" *ngIf="loading"></mat-progress-spinner>
+<mat-toolbar>
+  <mat-toolbar-row>
+    <form class="search-form">
+      <mat-form-field>
+        <input type="text" placeholder="Location" matInput [formControl]="search"
+               (keyup.enter)="onEnter(search.value)">
+      </mat-form-field>
+    </form>
+  </mat-toolbar-row>
+</mat-toolbar>
 <div *ngIf="!loading">
-  <mat-toolbar>
-      Ort: {{ data?.location?.name }}
-  </mat-toolbar>
   <mat-card>
-    <code>
-      {{ data | json }}
-    </code>
+    <h2>{{ data.provider.name }}</h2>
+    <div>
+      <em>{{data.temperature}} °C</em>
+    </div>
   </mat-card>
 </div>

@@ -1,13 +1,21 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
-import { HttpClientModule } from '@angular/common/http';
-import {MatCardModule, MatProgressSpinnerModule, MatToolbarModule} from '@angular/material';
+import {HttpClientModule} from '@angular/common/http';
+import {
+  MatAutocompleteModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatProgressSpinnerModule,
+  MatToolbarModule
+} from '@angular/material';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,13 +24,19 @@ import {MatCardModule, MatProgressSpinnerModule, MatToolbarModule} from '@angula
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     HttpClientModule,
-    MatToolbarModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatAutocompleteModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
