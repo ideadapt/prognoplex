@@ -6,12 +6,16 @@ import {MeteocentraleCrawlerService} from './meteocentrale-crawler.service';
 
 export interface WeatherData {
   temperature: number;
-  location: {
-    name: string
-  };
-  provider: {
-    name: string
-  };
+  location: Location;
+  provider: Provider;
+}
+
+export interface Location {
+  name: string;
+}
+
+export interface Provider {
+  name: string;
 }
 
 export interface ProviderCrawler {
@@ -22,7 +26,6 @@ export interface ProviderCrawler {
   providedIn: 'root'
 })
 export class WeatherDataCrawlerService {
-  private readonly db: Promise<DB>;
 
   constructor(private meteoCentrale: MeteocentraleCrawlerService) {
     this.db = idb.open('wemux', 1, upgradeDB => {
@@ -30,20 +33,26 @@ export class WeatherDataCrawlerService {
     });
   }
 
+  private readonly db: Promise<DB>;
+
+  static keyOf(item: WeatherData) {
+    return item.provider.name + ':' + item.location.name;
+  }
+
   async fetchFromLocal(item: WeatherData): Promise<WeatherData> {
     const db = await this.db;
-    const key = item.provider.name + ':' + item.location.name;
-    const data = await db.transaction('datastore', 'readonly').objectStore('datastore').get(key);
+    const data = await db.transaction('datastore', 'readonly')
+      .objectStore('datastore')
+      .get(WeatherDataCrawlerService.keyOf(item));
     return of(data).toPromise();
   }
 
   async storeLocal(item: WeatherData) {
     const db = await this.db;
-    const tx = db.transaction('datastore', 'readwrite');
     const clone = {...item};
-    clone.temperature = item.temperature * 10;
-    const key = clone.provider.name + ':' + clone.location.name;
-    tx.objectStore('datastore').put(clone, key);
+    const tx = db.transaction('datastore', 'readwrite');
+    tx.objectStore('datastore')
+      .put(clone, WeatherDataCrawlerService.keyOf(item));
     await tx.complete;
   }
 

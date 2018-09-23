@@ -1,18 +1,25 @@
-<mat-toolbar>
-  <mat-toolbar-row>
-    <form class="search-form">
-      <mat-form-field>
-        <input type="text" placeholder="Location" matInput [formControl]="search"
-               (keyup.enter)="onEnter(search.value)">
-      </mat-form-field>
-    </form>
-  </mat-toolbar-row>
-</mat-toolbar>
-<div *ngIf="!loading">
-  <mat-card>
-    <h2>{{ data.provider.name }}</h2>
-    <div>
-      <em>{{data.temperature}} °C</em>
+<main>
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <form class="search-form">
+        <mat-form-field>
+          <input type="text" placeholder="Location" matInput [formControl]="search"
+                 (keyup.enter)="onEnter(search.value)">
+        </mat-form-field>
+      </form>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <section>
+    <div *ngFor="let loc of getKeys(data)" class="location">
+      <h2>{{loc}}</h2>
+      <div *ngFor="let prov of getKeys(data.get(loc))" class="provider">
+        <mat-card>
+          <mat-spinner *ngIf="data.get(loc).get(prov).loading" diameter="20"></mat-spinner>
+          <div>
+            <em>{{ data.get(loc).get(prov).temperature }} °C</em>
+          </div>
+        </mat-card>
+      </div>
     </div>
-  </mat-card>
-</div>
+  </section>
+</main>
