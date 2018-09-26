@@ -35,7 +35,6 @@ export class AppComponent implements OnInit {
   showWeatherFor(locationName: string) {
     const provider = this.providers[0].name;
     this.crawler.fetch(locationName)
-    //.pipe(filter(data => !!data))
       .subscribe(weatherData => {
         let locationModel = this.data.get(locationName);
         if (!locationModel) {

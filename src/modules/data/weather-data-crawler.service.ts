@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {concat, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/internal/operators';
 import {DB, default as idb} from 'idb';
-import {MeteocentraleCrawlerService} from './meteocentrale-crawler.service';
+import {MeteoswissCrawlerService} from './meteoswiss-crawler.service';
 
 export interface WeatherData {
   temperature: number;
@@ -27,7 +27,7 @@ export interface ProviderCrawler {
 })
 export class WeatherDataCrawlerService {
 
-  constructor(private meteoCentrale: MeteocentraleCrawlerService) {
+  constructor(/*private crawler: MeteocentraleCrawlerService*/private crawler: MeteoswissCrawlerService) {
     this.db = idb.open('wemux', 1, upgradeDB => {
       upgradeDB.createObjectStore('datastore');
     });
@@ -57,7 +57,7 @@ export class WeatherDataCrawlerService {
   }
 
   fetch(locationName: string): Observable<WeatherData> {
-    const apiData = this.meteoCentrale
+    const apiData = this.crawler
       .getData(locationName)
       .pipe(tap(this.storeLocal.bind(this)));
 
