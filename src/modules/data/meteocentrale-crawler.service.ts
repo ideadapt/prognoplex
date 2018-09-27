@@ -9,6 +9,8 @@ import {ProviderCrawler, WeatherData} from './weather-data-crawler.service';
 })
 export class MeteocentraleCrawlerService implements ProviderCrawler {
 
+  name = 'meteocentrale';
+
   constructor(private  httpClient: HttpClient) {
   }
 
@@ -22,18 +24,18 @@ export class MeteocentraleCrawlerService implements ProviderCrawler {
     return div;
   }
 
-  private static htmlToModel(locationName: string, html: string): WeatherData {
+  private htmlToModel(locationName: string, html: string): WeatherData {
     const div = MeteocentraleCrawlerService.makeQuerieable(html);
     const part = div.querySelector('#lower-content');
     const details = part.querySelector('.detail-table-container');
     const temps = details.querySelectorAll('td[title=Temperatur]');
     return {
-      temperature: Number(temps[0].innerHTML.split(' ')[0]),
+      temperature: Number(Number(temps[0].innerHTML.split(' ')[0]).toFixed(2)),
       location: {
         name: locationName
       },
       provider: {
-        name: 'meteocentrale'
+        name: this.name
       }
     };
   }
@@ -66,6 +68,6 @@ export class MeteocentraleCrawlerService implements ProviderCrawler {
         responseType: 'text'
       })
       .pipe(concatMap(this.finalResult.bind(this)))
-      .pipe(map(MeteocentraleCrawlerService.htmlToModel.bind(null, locationName)));
+      .pipe(map(this.htmlToModel.bind(this, locationName)));
   }
 }

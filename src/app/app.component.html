@@ -10,13 +10,14 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <section>
-    <div *ngFor="let loc of getKeys(data)" class="location">
-      <h2>{{loc}}</h2>
+    <div *ngFor="let loc of getKeys(data); let i = index" class="location">
+      <h4>{{loc}}</h4>
       <div *ngFor="let prov of getKeys(data.get(loc))" class="provider">
         <mat-card>
           <mat-spinner *ngIf="data.get(loc).get(prov).loading" diameter="20"></mat-spinner>
+          <img *ngIf="i===0" src="../assets/{{prov.name}}.logo.png" width="16" height="16" class="provider-icon"/>
           <div>
-            <em>{{ data.get(loc).get(prov).temperature }} °C</em>
+            <span>{{ data.get(loc).get(prov).temperature }} °C</span>
           </div>
         </mat-card>
       </div>

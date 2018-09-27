@@ -17,3 +17,9 @@ mat-spinner {
   right: 5px;
   top: 5px;
 }
+
+.provider-icon {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}

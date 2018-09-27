@@ -9,6 +9,8 @@ import {ProviderCrawler, WeatherData} from './weather-data-crawler.service';
 })
 export class MeteoswissCrawlerService implements ProviderCrawler {
 
+  name = 'meteoswiss';
+
   constructor(private  httpClient: HttpClient) {
   }
 
@@ -39,14 +41,20 @@ export class MeteoswissCrawlerService implements ProviderCrawler {
         return this.httpClient.get(this.base + forecastUrl.replace(/\d{6}.json$/, plzForLocationName + '.json'));
       }),
       map(allData => {
-        const [, low, high] = allData[0].variance_range[23];
+        let [, low, high] = allData[0].variance_range[23];
+        if (low == null) {
+          low = high;
+        }
+        if (high == null) {
+          high = low;
+        }
         return {
-          temperature: (low + high) / 2,
+          temperature: Number(((low + high) / 2).toFixed(2)),
           location: {
             name: locationName
           },
           provider: {
-            name: 'meteoswiss'
+            name: this.name
           }
         };
       })

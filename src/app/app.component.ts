@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Provider, WeatherData, WeatherDataCrawlerService} from '../modules/data/weather-data-crawler.service';
+import {ProviderCrawler, WeatherData, WeatherDataCrawlerService} from '../modules/data/weather-data-crawler.service';
 import {FormControl} from '@angular/forms';
+import {MeteocentraleCrawlerService} from '../modules/data/meteocentrale-crawler.service';
+import {MeteoswissCrawlerService} from '../modules/data/meteoswiss-crawler.service';
 
 interface WeatherViewData {
   loading: boolean;
@@ -14,13 +16,17 @@ type ViewModel = WeatherData & WeatherViewData;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  data: Map<string, Map<string, WeatherData & WeatherViewData>> = new Map();
+  data: Map<string, Map<ProviderCrawler, WeatherData & WeatherViewData>> = new Map();
   activeSearchTerm = 'Chur';
   loading = true;
-  providers: Provider[] = [{name: 'meteocentrale'}];
+  providers: ProviderCrawler[] = [];
   search = new FormControl();
 
-  constructor(private crawler: WeatherDataCrawlerService) {
+  constructor(private crawler: WeatherDataCrawlerService,
+              meteocentrale: MeteocentraleCrawlerService,
+              meteoswiss: MeteoswissCrawlerService) {
+    this.providers.push(meteocentrale);
+    this.providers.push(meteoswiss);
   }
 
   ngOnInit(): void {
@@ -33,24 +39,22 @@ export class AppComponent implements OnInit {
   }
 
   showWeatherFor(locationName: string) {
-    const provider = this.providers[0].name;
-    this.crawler.fetch(locationName)
-      .subscribe(weatherData => {
-        let locationModel = this.data.get(locationName);
-        if (!locationModel) {
-          locationModel = new Map();
-          this.providers.forEach(prov => {
-            locationModel.set(prov.name, {loading: true, provider: {name: prov.name}} as ViewModel);
-          });
-          this.data.set(locationName, locationModel);
-        }
+    const locationModel = new Map();
+    this.providers.forEach(p => {
+      locationModel.set(p, {loading: true, provider: {name: p.name}} as ViewModel);
+    });
+    this.data.set(locationName, locationModel);
 
-        Object.assign(locationModel.get(provider), <ViewModel> weatherData);
-      }, err => {
-        console.error(err);
-      }, () => {
-        this.data.get(locationName).get(provider).loading = false;
-      });
+    this.providers.forEach(p => {
+      this.crawler.fetch(locationName, p)
+        .subscribe(weatherData => {
+          Object.assign(locationModel.get(p), <ViewModel> weatherData);
+        }, err => {
+          console.error(err);
+        }, () => {
+          this.data.get(locationName).get(p).loading = false;
+        });
+    });
   }
 
   onEnter(value: string) {
