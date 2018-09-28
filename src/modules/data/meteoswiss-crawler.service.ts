@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, ObservableInput} from 'rxjs';
 import {concatMap, filter, first, flatMap, map} from 'rxjs/internal/operators';
 import {ProviderCrawler, WeatherData} from './weather-data-crawler.service';
 
@@ -34,7 +34,7 @@ export class MeteoswissCrawlerService implements ProviderCrawler {
         const [plz, , , , , candidate] = e.split(';');
         return [plz, candidate];
       }),
-      filter(([plz, candidate]) => candidate.indexOf(locationName) > -1),
+      filter(([plz, candidate]) => candidate.toLowerCase().indexOf(locationName.toLowerCase()) > -1),
       first(),
       map(e => e[0]),
       concatMap(plzForLocationName => {
@@ -49,7 +49,7 @@ export class MeteoswissCrawlerService implements ProviderCrawler {
           high = low;
         }
         return {
-          temperature: Number(((low + high) / 2).toFixed(2)),
+          temperature: Number(((low + high) / 2).toFixed(1)),
           location: {
             name: locationName
           },
@@ -66,6 +66,8 @@ export class MeteoswissCrawlerService implements ProviderCrawler {
       .get(this.dataURL, {
         responseType: 'text'
       })
-      .pipe(flatMap(this.finalResult.bind(this, locationName)), flatMap(e => e));
+      .pipe(
+        flatMap(this.finalResult.bind(this, locationName)),
+        flatMap((e): ObservableInput<WeatherData> => e as ObservableInput<WeatherData>));
   }
 }

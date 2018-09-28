@@ -13,7 +13,7 @@ type ViewModel = WeatherData & WeatherViewData;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   data: Map<string, Map<ProviderCrawler, WeatherData & WeatherViewData>> = new Map();
@@ -50,6 +50,7 @@ export class AppComponent implements OnInit {
         .subscribe(weatherData => {
           Object.assign(locationModel.get(p), <ViewModel> weatherData);
         }, err => {
+          this.data.delete(locationName);
           console.error(err);
         }, () => {
           this.data.get(locationName).get(p).loading = false;

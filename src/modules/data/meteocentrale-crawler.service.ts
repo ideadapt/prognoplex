@@ -30,7 +30,7 @@ export class MeteocentraleCrawlerService implements ProviderCrawler {
     const details = part.querySelector('.detail-table-container');
     const temps = details.querySelectorAll('td[title=Temperatur]');
     return {
-      temperature: Number(Number(temps[0].innerHTML.split(' ')[0]).toFixed(2)),
+      temperature: Number(Number(temps[0].innerHTML.split(' ')[0]).toFixed(1)),
       location: {
         name: locationName
       },

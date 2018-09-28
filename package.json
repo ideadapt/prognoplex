@@ -5,9 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
+    "deploy": "ng build --prod && firebase deploy",
     "sw": "ng build --prod && http-server -c-1 dist/wemux"
   },
   "private": true,

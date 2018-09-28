@@ -1,26 +1,25 @@
 <main>
-  <mat-toolbar>
-    <mat-toolbar-row>
-      <form class="search-form">
-        <mat-form-field>
-          <input type="text" placeholder="Location" matInput [formControl]="search"
-                 (keyup.enter)="onEnter(search.value)">
-        </mat-form-field>
-      </form>
-    </mat-toolbar-row>
-  </mat-toolbar>
+  <form class="search-form">
+    <mat-form-field>
+      <input type="text" placeholder="Location" matInput [formControl]="search"
+             (keyup.enter)="onEnter(search.value)">
+    </mat-form-field>
+  </form>
   <section>
-    <div *ngFor="let loc of getKeys(data); let i = index" class="location">
-      <h4>{{loc}}</h4>
-      <div *ngFor="let prov of getKeys(data.get(loc))" class="provider">
-        <mat-card>
-          <mat-spinner *ngIf="data.get(loc).get(prov).loading" diameter="20"></mat-spinner>
-          <img *ngIf="i===0" src="../assets/{{prov.name}}.logo.png" width="16" height="16" class="provider-icon"/>
-          <div>
-            <span>{{ data.get(loc).get(prov).temperature }} °C</span>
-          </div>
-        </mat-card>
-      </div>
-    </div>
+    <mat-card *ngFor="let loc of getKeys(data); let i = index" class="location">
+      <span class="mat-subheading-2">{{loc}}</span>
+      <mat-card-content>
+        <div *ngFor="let prov of getKeys(data.get(loc)); last as last" class="provider">
+          <mat-divider></mat-divider>
+          <header>
+            <img *ngIf="i===0" src="../assets/{{prov.name}}.logo.png" width="16" height="16"
+                 class="provider-icon"/>
+            <div *ngIf="data.get(loc).get(prov).loading" class="bar"></div>
+          </header>
+          <p class="mat-title"><span>{{ data.get(loc).get(prov).temperature }}</span>&nbsp;<span
+            class="degree">°C</span></p>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </section>
 </main>

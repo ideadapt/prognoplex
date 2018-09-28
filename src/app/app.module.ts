@@ -10,6 +10,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {
   MatAutocompleteModule,
   MatCardModule,
+  MatDividerModule,
   MatFormFieldModule,
   MatInputModule,
   MatProgressSpinnerModule,
@@ -30,6 +31,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     MatAutocompleteModule,
     MatInputModule,
     MatToolbarModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     FormsModule,
